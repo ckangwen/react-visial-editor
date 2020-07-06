@@ -1,0 +1,16 @@
+.category-container {
+  height: 100%;
+  overflow: auto;
+  background: #fff;
+}
+.draggable-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  color: #fff;
+  margin-top: 12px;
+  padding: 8px;
+  border: 0;
+  overflow: hidden;
+}

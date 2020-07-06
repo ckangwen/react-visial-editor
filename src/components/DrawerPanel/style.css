@@ -1,0 +1,19 @@
+.vertical-radio-group {
+  display: flex;
+  flex-direction: column;
+}
+.radio-button-content {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.icon {
+  font-size: 20px;
+  min-width: 50px;
+}
+.radio-button-wrapper {
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  font-size: 17px;
+}

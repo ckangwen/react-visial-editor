@@ -1,0 +1,10 @@
+{
+  "extends": "eslint-config-umi",
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "@typescript-eslint/consistent-type-assertions": 0,
+    "typescript-eslint/consistent-type-assertions": 0,
+    "consistent-type-assertions": 0,
+    "jsx-a11y/anchor-has-content": 0
+  }
+}

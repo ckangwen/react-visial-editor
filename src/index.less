@@ -1,0 +1,15 @@
+@content-height: calc(100vh - 120px);
+
+.canvas-container {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  background-color: #F5F5F5;
+  padding: 33px;
+  height: calc(@content-height + 50px);
+  overflow: hidden;
+}
+
+:global .ant-tabs-card-content {
+  height: calc(100% - 40px);
+}
