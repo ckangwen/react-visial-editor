@@ -37,7 +37,7 @@ export function reduxConnect(props?: string[], options?: object) {
 }
 
 export function getPath({ path, index, isContainer }: RenderPath): string {
-  if (!path && index && !isContainer) {
+  if (!path && (typeof index === 'number') && index > -1 && !isContainer) {
     return `[${index}]`
   }
   if (path && isContainer) {
@@ -68,3 +68,5 @@ export const filterEmpty = (value: any) => {
 
   return isEmpty(props) ? null : props;
 };
+
+export function noop() {}

@@ -4,30 +4,34 @@ import { message } from 'antd';
 import { ContextMenu, MenuItem, SubMenu } from 'react-contextmenu';
 import SortableTree from '@/components/SortableTree';
 import DrawerPanel from '@/components/DrawerPanel';
-import { reduxConnect } from '@/utils';
+import { getPath, reduxConnect } from '@/utils';
 import { blocksCategory, treeContextmenuKey } from '@/config';
-import { CompSelectedInfo, VirtualComp } from '@/types/data';
-import { SortableTreeData } from '@/components/SortableTree/SortableTree';
+import { CompKeysProps, CompSelectedInfo, VirtualComp } from '@/types/data';
+import { AdditionalProps, SortableTreeData } from 'react-sortable-tree';
 import { ACTION_TYPES } from '@/models';
-import { DELETE_COMPONENT, INSERT_COMPONENT } from '@/types/store';
+import { CLEAR_SELECT_STATUS, DELETE_COMPONENT, INSERT_COMPONENT, SELECT_COMPONENT } from '@/types/store';
 
 let dispatch: Dispatch;
 interface DomTreeProps {
   projectSchema?: VirtualComp[];
   dispatch?: Dispatch;
   selectedInfo?: CompSelectedInfo;
+  compKeys: CompKeysProps;
   hoverKey?: string;
 }
 
-function toTreeData(projectSchema: VirtualComp[] = []): SortableTreeData[] {
-  return projectSchema.map((item: VirtualComp) => {
+function toTreeData(projectSchema: VirtualComp[] = [], parentPath?: string): SortableTreeData[] {
+  return projectSchema.map((item: VirtualComp, index: number) => {
     let children = item.children as any;
+    let path: string = getPath({ path: parentPath, index});
     if (item.children && item.children.length > 0) {
-      children = toTreeData(item.children || []);
+      children = toTreeData(item.children || [], path);
     }
     return {
       title: item.tag || item,
       expanded: false,
+      path,
+      key: item.key,
       children: children,
     };
   }) as SortableTreeData[];
@@ -55,7 +59,7 @@ function handleInsertComponent(data: string, path: string, parentPath: string, i
 
 
 function DomTree(props: DomTreeProps) {
-  const { projectSchema, selectedInfo, hoverKey } = props;
+  const { projectSchema, selectedInfo, hoverKey, compKeys = [] } = props;
 
   dispatch = props.dispatch!;
   const [visible, setVisible] = useState(false);
@@ -110,9 +114,27 @@ function DomTree(props: DomTreeProps) {
     }
   };
 
+  const handleClickTitle = (data: AdditionalProps) => {
+    const { key, path } = data.node;
+    const { selectedKey } = selectedInfo || {};
+    let type = ACTION_TYPES[SELECT_COMPONENT]
+    if (selectedKey === key) {
+      type = ACTION_TYPES[CLEAR_SELECT_STATUS]
+    }
+
+    dispatch({
+      type,
+      payload: {
+        componentConfig: data.node,
+        compKeys: [...compKeys, key],
+        path
+      }
+    })
+  }
+
   return (
     <>
-      <SortableTree data={treeData} onChange={handleChange} />
+      <SortableTree data={treeData} onChange={handleChange} onClick={handleClickTitle} additionalProps={{ selectedKey: selectedInfo?.selectedKey }} />
       <ContextMenu id={treeContextmenuKey} rtl>
         <MenuItem onClick={handleContextmenuClick} data={{ action: 'removeNode' }}>
           删除节点
@@ -139,4 +161,4 @@ function DomTree(props: DomTreeProps) {
   );
 }
 
-export default reduxConnect(['projectSchema', 'selectedInfo'])(DomTree);
+export default reduxConnect(['projectSchema', 'selectedInfo', 'compKeys'])(DomTree);

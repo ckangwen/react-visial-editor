@@ -6,6 +6,8 @@ export interface CompSelectedInfo {
   compKeys: string[];
 }
 
+export type CompKeysProps = string[]
+
 export interface VirtualComp {
   key: string;
   tag: string;

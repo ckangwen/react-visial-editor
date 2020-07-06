@@ -1,6 +1,7 @@
 import React, { Children, cloneElement } from 'react';
 import styles from './index.css'
-
+import { editor } from 'monaco-editor';
+import colorize = editor.colorize;
 
 export default function TreeNodeRenderer(props: any) {
   const {
@@ -20,10 +21,12 @@ export default function TreeNodeRenderer(props: any) {
     rowDirection,
     getPrevRow, // Delete from otherProps
     node, // Delete from otherProps
-    path, // Delete from otherProps
+    path,
+    onClick,
+    style,
     ...otherProps
   } = props;
-
+  console.log(props);
   const scaffoldBlockCount = lowerSiblingCounts.length - 1;
   let dropType
   if (canDrop && !isOver) {

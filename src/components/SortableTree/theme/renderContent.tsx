@@ -4,7 +4,6 @@ import { ContextMenuTrigger } from 'react-contextmenu';
 import { treeContextmenuKey } from '@/config'
 import styles from './index.css'
 
-
 export default function NodeContentRenderer(props: any) {
   const {
     scaffoldBlockPxWidth,
@@ -33,9 +32,11 @@ export default function NodeContentRenderer(props: any) {
     isOver, // Not needed, but preserved for other renderers
     parentNode, // Needed for dndManager
     rowDirection,
+    onClick,
+    selectedKey,
     ...otherProps
   } = props;
-
+  const isSelected = node.key === selectedKey
   const nodeTitle = title || node.title;
   const isDraggedDescendant = draggedNode && isDescendant(draggedNode, node);
   const nodeContent = connectDragPreview(
@@ -48,8 +49,15 @@ export default function NodeContentRenderer(props: any) {
     </div>,
   );
 
+  const labelStyle = {
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: isSelected ? '#e6f7ff' : '#fff',
+    color: isSelected ? '#1890ff' : '#000'
+  }
   return (
-    <div style={{ height: '100%', display: 'flex', alignItems: 'center' }} {...otherProps}>
+    <div style={labelStyle} {...otherProps}>
       {toggleChildrenVisibility &&
         node.children &&
         (node.children.length > 0 || typeof node.children === 'function') && (
@@ -67,20 +75,22 @@ export default function NodeContentRenderer(props: any) {
       {!node.children && (
         <span style={{ width: 20, height: 14 }} />
       )}
-      <ContextMenuTrigger id={treeContextmenuKey} holdToDisplay={1000}>
-        <div className={styles["row-wrapper"]}>
-          <div
-            className={styles["row"]}
-            style={{
-              opacity: isDraggedDescendant ? 0.5 : 1,
-              paddingLeft: scaffoldBlockPxWidth,
-              ...style,
-            }}
-          >
-            {canDrag ? connectDragSource(nodeContent, { dropEffect: 'copy' }) : nodeContent}
+      <div style={{ flex: 1 }} onClick={onClick}>
+        <ContextMenuTrigger id={treeContextmenuKey} holdToDisplay={1000}>
+          <div className={styles["row-wrapper"]}>
+            <div
+              className={styles["row"]}
+              style={{
+                opacity: isDraggedDescendant ? 0.5 : 1,
+                paddingLeft: scaffoldBlockPxWidth,
+                ...style,
+              }}
+            >
+              {canDrag ? connectDragSource(nodeContent, { dropEffect: 'copy' }) : nodeContent}
+            </div>
           </div>
-        </div>
-      </ContextMenuTrigger>
+        </ContextMenuTrigger>
+      </div>
     </div>
   );
 }
