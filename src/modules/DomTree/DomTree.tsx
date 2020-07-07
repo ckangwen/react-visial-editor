@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dispatch } from 'redux';
 import { message } from 'antd';
 import { ContextMenu, MenuItem, SubMenu } from 'react-contextmenu';
 import SortableTree from '@/components/SortableTree';
 import DrawerPanel from '@/components/DrawerPanel';
-import { getPath, reduxConnect } from '@/utils';
+import { getPath, reduxConnect, usePrevious } from '@/utils';
 import { blocksCategory, treeContextmenuKey } from '@/config';
 import { CompKeysProps, CompSelectedInfo, VirtualComp } from '@/types/data';
 import { AdditionalProps, SortableTreeData } from 'react-sortable-tree';
 import { ACTION_TYPES } from '@/models';
-import { CLEAR_SELECT_STATUS, DELETE_COMPONENT, INSERT_COMPONENT, SELECT_COMPONENT } from '@/types/store';
+import random from 'lodash/random';
+import cloneDeep from 'lodash/cloneDeep';
+
+import {
+  CLEAR_SELECT_STATUS,
+  DELETE_COMPONENT,
+  INSERT_COMPONENT,
+  SELECT_COMPONENT,
+} from '@/types/store';
 
 let dispatch: Dispatch;
 interface DomTreeProps {
@@ -23,7 +31,7 @@ interface DomTreeProps {
 function toTreeData(projectSchema: VirtualComp[] = [], parentPath?: string): SortableTreeData[] {
   return projectSchema.map((item: VirtualComp, index: number) => {
     let children = item.children as any;
-    let path: string = getPath({ path: parentPath, index});
+    let path: string = getPath({ path: parentPath, index });
     if (item.children && item.children.length > 0) {
       children = toTreeData(item.children || [], path);
     }
@@ -37,10 +45,9 @@ function toTreeData(projectSchema: VirtualComp[] = [], parentPath?: string): Sor
   }) as SortableTreeData[];
 }
 
-
 function handleInsertComponent(data: string, path: string, parentPath: string, index: number) {
   // Breadcrumb.Item => Breadcrumb，用于判断选中组件是否被注册
-  let key = (data.indexOf('.') > -1) ? data.slice(0, data.indexOf('.')) : data;
+  let key = data.indexOf('.') > -1 ? data.slice(0, data.indexOf('.')) : data;
   if (Object.keys(blocksCategory).indexOf(key) < 0) {
     message.warning('该组件不存在');
     return;
@@ -57,15 +64,18 @@ function handleInsertComponent(data: string, path: string, parentPath: string, i
   });
 }
 
-
 function DomTree(props: DomTreeProps) {
   const { projectSchema, selectedInfo, hoverKey, compKeys = [] } = props;
 
   dispatch = props.dispatch!;
   const [visible, setVisible] = useState(false);
   const [action, setAction] = useState('');
-  const _treeData = toTreeData(projectSchema);
-  const [treeData, setTreeData] = useState(_treeData);
+  let _treeData: SortableTreeData[] = toTreeData(projectSchema);
+  const [treeData, setTreeData] = useState<SortableTreeData[]>(_treeData);
+  useEffect(() => {
+    // FIX: treeData不会主动更新
+    setTreeData(_treeData);
+  }, [projectSchema]);
 
   const handleChange = (value: any) => {
     setTreeData(value);
@@ -78,21 +88,22 @@ function DomTree(props: DomTreeProps) {
     }
     const { action } = data;
     setAction(action);
-    setVisible(true);
+    if (action === 'removeNode') {
+      dispatch({
+        type: ACTION_TYPES[DELETE_COMPONENT],
+      });
+    } else {
+      setVisible(true);
+    }
   };
+  // 在Drawer中选中组件之后，进行dispatch，修改整个页面的结构
   const handleSelect = (data: any) => {
     setVisible(false);
     const { path } = selectedInfo || {};
     if (!path) {
-      return message.warning('目标未选中或路径不存在')
+      return message.warning('目标未选中或路径不存在');
     }
     switch (action) {
-      case 'removeNode': {
-        dispatch({
-          type: ACTION_TYPES[DELETE_COMPONENT],
-        });
-        break;
-      }
       case 'insertBefore': {
         const parentPath = path.slice(0, path.lastIndexOf('.'));
         const index = parseInt(path.charAt(path.length - 2));
@@ -114,12 +125,13 @@ function DomTree(props: DomTreeProps) {
     }
   };
 
+  // 点击DomTree中某一个行，设置为选中状态，并更新selectedInfo
   const handleClickTitle = (data: AdditionalProps) => {
     const { key, path } = data.node;
     const { selectedKey } = selectedInfo || {};
-    let type = ACTION_TYPES[SELECT_COMPONENT]
+    let type = ACTION_TYPES[SELECT_COMPONENT];
     if (selectedKey === key) {
-      type = ACTION_TYPES[CLEAR_SELECT_STATUS]
+      type = ACTION_TYPES[CLEAR_SELECT_STATUS];
     }
 
     dispatch({
@@ -127,14 +139,19 @@ function DomTree(props: DomTreeProps) {
       payload: {
         componentConfig: data.node,
         compKeys: [...compKeys, key],
-        path
-      }
-    })
-  }
+        path,
+      },
+    });
+  };
 
   return (
     <>
-      <SortableTree data={treeData} onChange={handleChange} onClick={handleClickTitle} additionalProps={{ selectedKey: selectedInfo?.selectedKey }} />
+      <SortableTree
+        data={treeData}
+        onChange={handleChange}
+        onClick={handleClickTitle}
+        additionalProps={{ selectedKey: selectedInfo?.selectedKey }}
+      />
       <ContextMenu id={treeContextmenuKey} rtl>
         <MenuItem onClick={handleContextmenuClick} data={{ action: 'removeNode' }}>
           删除节点

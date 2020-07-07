@@ -1,8 +1,8 @@
 import React from 'react';
 import { CaretRightOutlined } from '@ant-design/icons';
 import { ContextMenuTrigger } from 'react-contextmenu';
-import { treeContextmenuKey } from '@/config'
-import styles from './index.css'
+import { treeContextmenuKey } from '@/config';
+import styles from './index.css';
 
 export default function NodeContentRenderer(props: any) {
   const {
@@ -36,13 +36,13 @@ export default function NodeContentRenderer(props: any) {
     selectedKey,
     ...otherProps
   } = props;
-  const isSelected = node.key === selectedKey
+  const isSelected = node.key === selectedKey;
   const nodeTitle = title || node.title;
   const isDraggedDescendant = draggedNode && isDescendant(draggedNode, node);
   const nodeContent = connectDragPreview(
-    <div className={styles["row-content"]}>
-      <div className={styles["row-label"]}>
-        <span className={styles["row-title"]}>
+    <div className={styles['row-content']}>
+      <div className={styles['row-label']}>
+        <span className={styles['row-title']}>
           {typeof nodeTitle === 'function' ? nodeTitle({ node, path, treeIndex }) : nodeTitle}
         </span>
       </div>
@@ -54,8 +54,8 @@ export default function NodeContentRenderer(props: any) {
     display: 'flex',
     alignItems: 'center',
     backgroundColor: isSelected ? '#e6f7ff' : '#fff',
-    color: isSelected ? '#1890ff' : '#000'
-  }
+    color: isSelected ? '#1890ff' : '#000',
+  };
   return (
     <div style={labelStyle} {...otherProps}>
       {toggleChildrenVisibility &&
@@ -72,14 +72,12 @@ export default function NodeContentRenderer(props: any) {
             }
           />
         )}
-      {!node.children && (
-        <span style={{ width: 20, height: 14 }} />
-      )}
+      {!node.children && <span style={{ width: 20, height: 14 }} />}
       <div style={{ flex: 1 }} onClick={onClick}>
         <ContextMenuTrigger id={treeContextmenuKey} holdToDisplay={1000}>
-          <div className={styles["row-wrapper"]}>
+          <div className={styles['row-wrapper']}>
             <div
-              className={styles["row"]}
+              className={styles['row']}
               style={{
                 opacity: isDraggedDescendant ? 0.5 : 1,
                 paddingLeft: scaffoldBlockPxWidth,

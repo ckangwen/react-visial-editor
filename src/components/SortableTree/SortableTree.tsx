@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactSortableTree, { AdditionalProps, SortableTreeData } from 'react-sortable-tree';
 import CustomTheme from './theme';
 import 'react-sortable-tree/style.css';
-import { noop } from '@/utils'
+import { getPath, noop, usePrevious } from '@/utils';
+import { VirtualComp } from '@/types/data';
 
 interface SortableTreeProps {
   data: SortableTreeData[];
@@ -11,19 +12,17 @@ interface SortableTreeProps {
   additionalProps?: any;
 }
 
+
 export default function SortableTree(props: SortableTreeProps) {
-  const {
-    data,
-    onChange,
-    onClick = noop,
-    additionalProps = {}
-  } = props;
+  const { data, onChange, onClick = noop, additionalProps = {} } = props;
   const generateNodeProps = (data: AdditionalProps) => {
     return {
       onClick: () => onClick(data),
-      ...additionalProps
-    }
-  }
+      ...additionalProps,
+    };
+  };
+  const [treeData, setTreeData] = useState(data);
+
   return (
     <div style={{ height: 400, width: 200, outline: 0 }}>
       <ReactSortableTree

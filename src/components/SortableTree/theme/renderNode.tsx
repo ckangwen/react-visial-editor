@@ -1,7 +1,5 @@
 import React, { Children, cloneElement } from 'react';
-import styles from './index.css'
-import { editor } from 'monaco-editor';
-import colorize = editor.colorize;
+import styles from './index.css';
 
 export default function TreeNodeRenderer(props: any) {
   const {
@@ -26,30 +24,28 @@ export default function TreeNodeRenderer(props: any) {
     style,
     ...otherProps
   } = props;
-  console.log(props);
-  const scaffoldBlockCount = lowerSiblingCounts.length - 1;
-  let dropType
-  if (canDrop && !isOver) {
-    dropType = 'validDrop'
-  } else if (!canDrop && isOver) {
-    dropType = 'invalidDrop'
-  }
-
+  // const scaffoldBlockCount = lowerSiblingCounts.length - 1;
+  // let dropType
+  // if (canDrop && !isOver) {
+  //   dropType = 'validDrop'
+  // } else if (!canDrop && isOver) {
+  //   dropType = 'invalidDrop'
+  // }
 
   return connectDropTarget(
-    <div  {...otherProps}>
+    <div {...otherProps}>
       <div
-        className={styles["nodeContent"]}
-        style={{paddingLeft: scaffoldBlockPxWidth * path.length }}
+        className={styles['nodeContent']}
+        style={{ paddingLeft: scaffoldBlockPxWidth * path.length }}
       >
         {Children.map(children, child =>
           cloneElement(child, {
             isOver,
             canDrop,
             draggedNode,
-          })
+          }),
         )}
       </div>
-    </div>
-  )
+    </div>,
+  );
 }

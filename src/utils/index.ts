@@ -50,7 +50,7 @@ export function getPath({ path, index, isContainer }: RenderPath): string {
 }
 
 
-export function usePrevious(value: any) {
+export function usePrevious(value: any): any {
   const ref = useRef();
   useEffect(() => {
     ref.current = value;

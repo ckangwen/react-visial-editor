@@ -209,6 +209,7 @@ const Model = {
     selectComponent(state: StateType, { payload }: any) {
       // TODO componentConfig => vcomponent
       const { componentConfig, compKeys, path } = payload;
+      console.log(payload);
       const { tag, key } = componentConfig;
 
       const { propsConfig } = AllComponentPropConfig[tag as CollectedComponents] || {};

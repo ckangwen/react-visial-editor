@@ -1,6 +1,7 @@
 .vertical-radio-group {
   display: flex;
   flex-direction: column;
+  width: 270px;
 }
 .radio-button-content {
   display: flex;
