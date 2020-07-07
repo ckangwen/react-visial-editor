@@ -1,0 +1,43 @@
+.sort-tree-container {
+  display: flex;
+  overflow: auto;
+  height: 100%;
+}
+.sort-tree-container .sort-tree {
+  flex: 1;
+  width: fit-content;
+}
+.sort-tree-container .sort-tree .sort-tree-item > .header-container {
+  padding-top: 0;
+}
+.sort-tree-container .sort-tree .header-container {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 5px 5px 10px;
+  white-space: nowrap;
+}
+.sort-tree-container :global .ant-collapse {
+  display: flex;
+}
+.sort-tree-container :global .ant-collapse-borderless {
+  background-color: #fff;
+}
+.sort-tree-container :global .ant-collapse-borderless > .ant-collapse-item {
+  border: 0;
+}
+.sort-tree-container :global .ant-collapse-header {
+  padding: 0 !important;
+  border: 0;
+}
+.sort-tree-container :global .ant-collapse-content > .ant-collapse-content-box {
+  padding: 0 0 0 16px;
+}
+.sort-tree-container :global .ant-collapse-borderless > .ant-collapse-item {
+  flex: 1 !important;
+}
+.sort-tree-container :global .ant-collapse-header {
+  padding: 0 !important;
+  border: 0;
+}
