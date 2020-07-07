@@ -4,13 +4,11 @@ import { message } from 'antd';
 import { ContextMenu, MenuItem, SubMenu } from 'react-contextmenu';
 import SortableTree from '@/components/SortableTree';
 import DrawerPanel from '@/components/DrawerPanel';
-import { getPath, reduxConnect, usePrevious } from '@/utils';
+import { getPath, reduxConnect } from '@/utils';
 import { blocksCategory, treeContextmenuKey } from '@/config';
 import { CompKeysProps, CompSelectedInfo, VirtualComp } from '@/types/data';
 import { AdditionalProps, SortableTreeData } from 'react-sortable-tree';
 import { ACTION_TYPES } from '@/models';
-import random from 'lodash/random';
-import cloneDeep from 'lodash/cloneDeep';
 
 import {
   CLEAR_SELECT_STATUS,
@@ -65,7 +63,7 @@ function handleInsertComponent(data: string, path: string, parentPath: string, i
 }
 
 function DomTree(props: DomTreeProps) {
-  const { projectSchema, selectedInfo, hoverKey, compKeys = [] } = props;
+  const { projectSchema, selectedInfo, compKeys = [] } = props;
 
   dispatch = props.dispatch!;
   const [visible, setVisible] = useState(false);

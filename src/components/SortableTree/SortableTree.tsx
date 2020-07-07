@@ -21,7 +21,6 @@ export default function SortableTree(props: SortableTreeProps) {
       ...additionalProps,
     };
   };
-  const [treeData, setTreeData] = useState(data);
 
   return (
     <div style={{ height: 400, width: 200, outline: 0 }}>
