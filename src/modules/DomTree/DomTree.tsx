@@ -7,7 +7,7 @@ import DrawerPanel from '@/components/DrawerPanel';
 import { getPath, reduxConnect } from '@/utils';
 import { blocksCategory, treeContextmenuKey } from '@/config';
 import { CompKeysProps, CompSelectedInfo, VirtualComp } from '@/types/data';
-import { AdditionalProps, SortableTreeData } from 'react-sortable-tree';
+import { AdditionalProps, OnVisibilityToggleProps, SortableTreeData } from 'react-sortable-tree';
 import { ACTION_TYPES } from '@/models';
 
 import {
@@ -18,11 +18,14 @@ import {
 } from '@/types/store';
 
 let dispatch: Dispatch;
+let expandedPath: string = '';
+let expandedPaths = new Set<string>();
+
 interface DomTreeProps {
   projectSchema?: VirtualComp[];
   dispatch?: Dispatch;
   selectedInfo?: CompSelectedInfo;
-  compKeys: CompKeysProps;
+  compKeys?: CompKeysProps;
   hoverKey?: string;
 }
 
@@ -142,6 +145,14 @@ function DomTree(props: DomTreeProps) {
     });
   };
 
+  function onVisibilityToggle({ node }: OnVisibilityToggleProps) {
+    const { path } = node;
+    if (expandedPaths.has(path)) {
+      expandedPaths.delete(path)
+    } else {
+      expandedPaths.add(path);
+    }
+  }
   return (
     <>
       <SortableTree
@@ -149,6 +160,8 @@ function DomTree(props: DomTreeProps) {
         onChange={handleChange}
         onClick={handleClickTitle}
         additionalProps={{ selectedKey: selectedInfo?.selectedKey }}
+        expandedPaths={[...expandedPaths]}
+        onVisibilityToggle={onVisibilityToggle}
       />
       <ContextMenu id={treeContextmenuKey} rtl>
         <MenuItem onClick={handleContextmenuClick} data={{ action: 'removeNode' }}>
