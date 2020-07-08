@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReactSortableTree, {
   AdditionalProps,
   SortableTreeData,
@@ -7,8 +7,7 @@ import ReactSortableTree, {
 } from 'react-sortable-tree';
 import CustomTheme from './theme';
 import 'react-sortable-tree/style.css';
-import { getPath, noop, usePrevious } from '@/utils';
-import { VirtualComp } from '@/types/data';
+import { noop } from '@/utils';
 
 interface SortableTreeProps {
   data: SortableTreeData[];
@@ -19,14 +18,15 @@ interface SortableTreeProps {
   onVisibilityToggle?: (data: OnVisibilityToggleProps) => void;
 }
 
-function fuseSeatch(arr: string[], str: string) {
-
-
-}
-
-
 export default function SortableTree(props: SortableTreeProps) {
-  const { data, onChange, onClick = noop, additionalProps = {}, expandedPaths, onVisibilityToggle = noop } = props;
+  const {
+    data,
+    onChange,
+    onClick = noop,
+    additionalProps = {},
+    expandedPaths,
+    onVisibilityToggle = noop,
+  } = props;
   const generateNodeProps = (data: AdditionalProps) => {
     return {
       onClick: () => onClick(data),
@@ -36,15 +36,15 @@ export default function SortableTree(props: SortableTreeProps) {
   const newData = map({
     treeData: data,
     callback: ({ node }: any) => {
-      const { path } = node
-        if (expandedPaths.some(item => item.startsWith(path))) {
-            return {
-            ...node,
-            expanded: true
-          }
-        } else {
-          return  node
-        }
+      const { path } = node;
+      if (expandedPaths.some(item => item.startsWith(path))) {
+        return {
+          ...node,
+          expanded: true,
+        };
+      } else {
+        return node;
+      }
     },
     getNodeKey: ({ treeIndex }: any) => treeIndex,
     ignoreCollapsed: false,

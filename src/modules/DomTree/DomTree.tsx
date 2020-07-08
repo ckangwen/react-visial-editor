@@ -18,7 +18,6 @@ import {
 } from '@/types/store';
 
 let dispatch: Dispatch;
-let expandedPath: string = '';
 let expandedPaths = new Set<string>();
 
 interface DomTreeProps {
@@ -97,6 +96,7 @@ function DomTree(props: DomTreeProps) {
       setVisible(true);
     }
   };
+
   // 在Drawer中选中组件之后，进行dispatch，修改整个页面的结构
   const handleSelect = (data: any) => {
     setVisible(false);
@@ -127,7 +127,7 @@ function DomTree(props: DomTreeProps) {
   };
 
   // 点击DomTree中某一个行，设置为选中状态，并更新selectedInfo
-  const handleClickTitle = (data: AdditionalProps) => {
+  const handleNodeTileClick = (data: AdditionalProps) => {
     const { key, path } = data.node;
     const { selectedKey } = selectedInfo || {};
     let type = ACTION_TYPES[SELECT_COMPONENT];
@@ -148,7 +148,7 @@ function DomTree(props: DomTreeProps) {
   function onVisibilityToggle({ node }: OnVisibilityToggleProps) {
     const { path } = node;
     if (expandedPaths.has(path)) {
-      expandedPaths.delete(path)
+      expandedPaths.delete(path);
     } else {
       expandedPaths.add(path);
     }
@@ -158,7 +158,7 @@ function DomTree(props: DomTreeProps) {
       <SortableTree
         data={treeData}
         onChange={handleChange}
-        onClick={handleClickTitle}
+        onClick={handleNodeTileClick}
         additionalProps={{ selectedKey: selectedInfo?.selectedKey }}
         expandedPaths={[...expandedPaths]}
         onVisibilityToggle={onVisibilityToggle}
