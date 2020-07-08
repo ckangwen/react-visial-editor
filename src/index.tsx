@@ -6,6 +6,7 @@ import DomTree from '@/modules/DomTree'
 import ToolBar from '@/modules/ToolBar'
 import styles from './index.css'
 import './react-contextmenu.css'
+import { RenderCanvas } from '@/modules/RenderCanvas';
 const { TabPane } = Tabs;
 
 export default function() {
@@ -19,9 +20,9 @@ export default function() {
          <ComponentSetting />
         </Layout.Sider>
         <Layout.Content>
-          <div className={styles['canvas-container']}>
-            Main
-          </div>
+          <section className={styles['canvas-container']}>
+            <RenderCanvas />
+          </section>
         </Layout.Content>
         <Layout.Sider style={{ background: '#fff', height: 'calc(100vh - 64px)' }}>
          <Tabs defaultActiveKey="1" style={{ height: '100%' }}>
