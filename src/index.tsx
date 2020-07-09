@@ -7,6 +7,7 @@ import ToolBar from '@/modules/ToolBar'
 import styles from './index.css'
 import './react-contextmenu.css'
 import { RenderCanvas } from '@/modules/RenderCanvas';
+import PropPanel from '@/modules/PropsPanel';
 const { TabPane } = Tabs;
 
 export default function() {
@@ -30,7 +31,7 @@ export default function() {
              <DomTree />
            </TabPane>
            <TabPane tab="组件属性" key="2">
-             组件属性
+             <PropPanel/>
            </TabPane>
            <TabPane tab="组件样式" key="3">
              组件样式

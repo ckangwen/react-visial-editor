@@ -52,15 +52,15 @@ export interface ComponentConfig {
 }
 
 interface PropsConfig {
-  [propName: string]: CompAttrType
+  [propName: string]: ComponentPropDeclaration
 }
 
-interface CompAttrType {
+export interface ComponentPropDeclaration {
   title?: string
   type?: PROPS_TYPES | PROPS_TYPES[]
   description?: string
   enum?: string[]
-  properties?: any
+  properties?: ComponentPropDeclaration[] | string[];
   default?: any
   rules?: any[]
 }

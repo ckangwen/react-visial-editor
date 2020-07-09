@@ -1,0 +1,9 @@
+:global .fr-label-title {
+  flex-direction: column;
+}
+:global .fr-field.w-100.flex {
+  align-items: flex-start;
+}
+:global .fr-label-title.no-colon .fr-desc {
+  margin-left: 0;
+}

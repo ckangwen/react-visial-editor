@@ -22,11 +22,11 @@ function onDrop() {}
 function onDragover(e: any) {}
 
 function RenderCanvas(props: RenderCanvasProps) {
+  // TODO 需要避免多次渲染
   const { projectSchema, selectedInfo = {}, hoverKey = '' } = props;
   dispatch = props.dispatch!;
   const [spinShow, setSpinShow] = useState(true);
   let content: any;
-  console.log(projectSchema);
   if (Array.isArray(projectSchema) && projectSchema.length > 0) {
     const { tag, key } = projectSchema[0] || {};
     const resultProps = {

@@ -15,7 +15,7 @@ export const CLEAR_SELECT_STATUS = 'CLEAR_SELECT_STATUS';
 export interface StateType {
   projectSchema: VirtualComp[]
   selectedInfo: CompSelectedInfo
-  propsSetting: any
+  projectPropsSheet: any
   styleSetting: any
   undo: any[],
   redo: any[],

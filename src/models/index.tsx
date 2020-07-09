@@ -17,12 +17,11 @@ import {
 import { v4 as uuid } from 'uuid';
 import update from 'lodash/update';
 import cloneDeep from 'lodash/cloneDeep';
-
+import get from 'lodash/get';
 
 export interface PropsConfigType {
   [propName: string]: PropInfoType;
 }
-
 
 export interface PropInfoType {
   //属性展示的文字
@@ -93,13 +92,12 @@ const Model = {
   state: {
     projectSchema: defaultData,
     selectedInfo: {},
-    propsSetting: {},
+    projectPropsSheet: {},
     styleSetting: {},
     dropData: {},
     dragData: {},
   },
   effects: {},
-
 
   reducers: {
     addComponent(state: StateType) {
@@ -109,8 +107,8 @@ const Model = {
       const children = Array.isArray(defaultProps.children)
         ? defaultProps.children
         : typeof defaultProps.children === 'string'
-          ? [defaultProps.children]
-          : [];
+        ? [defaultProps.children]
+        : [];
       delete defaultProps.children;
       let newKey = uuid();
       const newComp = {
@@ -145,8 +143,8 @@ const Model = {
       const children = Array.isArray(newDefaultProps.children)
         ? newDefaultProps.children
         : typeof newDefaultProps.children === 'string'
-          ? [newDefaultProps.children]
-          : [];
+        ? [newDefaultProps.children]
+        : [];
       delete newDefaultProps.children;
       let newKey = uuid();
       const newComp = {
@@ -207,11 +205,9 @@ const Model = {
       };
     },
     selectComponent(state: StateType, { payload }: any) {
-      // TODO componentConfig => vcomponent
+      const { projectSchema } = state;
       const { componentConfig, compKeys, path } = payload;
       const { tag, key } = componentConfig;
-
-      const { propsConfig } = AllComponentPropConfig[tag as CollectedComponents] || {};
       let selectedKey = key;
 
       return {
@@ -222,9 +218,7 @@ const Model = {
           path,
           compKeys,
         },
-        propsSetting: {
-          propsConfig,
-        },
+        projectPropsSheet: get(projectSchema, path).props,
         hoverKey: null,
       };
     },
@@ -260,33 +254,32 @@ const Model = {
       };
     },
     setComponentProps(state: StateType, { payload }: any) {
-      const { propsSetting, projectSchema: prevComponentConfigs, selectedInfo } = state;
+      const { projectPropsSheet, projectSchema: prevComponentConfigs, selectedInfo } = state;
 
       const { newProps } = payload;
-      const { path } = selectedInfo;
+      const { path, selectedKey } = selectedInfo;
       const projectSchema = cloneDeep(prevComponentConfigs);
+      // prevCompProps默认是组件配置中的props属性
+      let prevCompProps = get(projectSchema, path).props;
+      const currentCompProps = {
+        ...prevCompProps,
+        ...newProps,
+      };
 
       update(projectSchema, path, item => {
         return {
           ...item,
-          props: {
-            ...item.props,
-            ...newProps,
-          },
+          props: currentCompProps,
         };
       });
 
       return {
         ...state,
         projectSchema,
-        propsSetting: {
-          ...propsSetting,
-          ...newProps,
-        },
+        projectPropsSheet: currentCompProps,
       };
     },
   },
-
 };
 
 export default Model;

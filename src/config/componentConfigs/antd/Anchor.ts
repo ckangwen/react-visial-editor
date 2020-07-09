@@ -28,3 +28,5 @@ const Anchor: ComponentConfig = {
     },
   },
 }
+
+export default Anchor

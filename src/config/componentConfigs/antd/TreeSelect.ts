@@ -1,5 +1,5 @@
 import { PROPS_TYPES, ComponentConfig } from '@/types';
-import { TreeSelect as AntTreeSelect } from 'Antd'
+import { TreeSelect as AntTreeSelect } from 'antd'
 
 
 const TreeSelect: ComponentConfig = {
