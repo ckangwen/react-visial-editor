@@ -1,6 +1,5 @@
 import React from 'react';
 import { Layout, Tabs } from 'antd'
-// import 'antd/dist/antd.min.css'
 import ComponentSetting from '@/modules/ComponentSetting'
 import DomTree from '@/modules/DomTree'
 import ToolBar from '@/modules/ToolBar'
@@ -27,7 +26,7 @@ export default function() {
         </Layout.Content>
         <Layout.Sider style={{ background: '#fff', height: 'calc(100vh - 64px)' }}>
          <Tabs defaultActiveKey="1" style={{ height: '100%' }}>
-           <TabPane tab="DOM树" key="1" style={{ height: '100%' }}>
+           <TabPane tab="DOM树" key="1" style={{ height: 'calc(100vh - 126px)', overflow: 'auto' }} className="domTree-tabPane">
              <DomTree />
            </TabPane>
            <TabPane tab="组件属性" key="2">

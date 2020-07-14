@@ -10,9 +10,10 @@ export type CompKeysProps = string[]
 
 export interface VirtualComp {
   key: string;
-  tag: string;
-  props: any;
-  children?: VirtualComp[]
+  tag?: string;
+  props?: any;
+  children?: VirtualComp[];
+  text?: string;
 }
 
 export interface DragDataType {

@@ -42,7 +42,7 @@ export const iframeSrcDoc = `<!DOCTYPE html>
      <script src="./antd.min.js"></script>
 </head>
 <body>
-<div style="height: 100%" id="dnd-container">
+<div style="height: 100%;overflow: hidden;" id="dnd-container">
 </div>
 </body>
 </html>

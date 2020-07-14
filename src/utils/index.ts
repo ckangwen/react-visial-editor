@@ -4,6 +4,7 @@ import each from 'lodash/each';
 import isEmpty from 'lodash/isEmpty';
 import { namespace } from '@/models'
 import { useRef, useEffect } from 'react';
+import { VirtualComp } from '@/types';
 
 interface RenderPath {
   path?: string,
@@ -70,3 +71,16 @@ export const filterEmpty = (value: any) => {
 };
 
 export function noop() {}
+
+export function getNewSortChildNodes(sortKeys: string[], oldChildNodes: VirtualComp[], dragNode?: VirtualComp) {
+  const nextChildNodes: VirtualComp[] = [], childMap: { [key: string]: VirtualComp } = {};
+  each(oldChildNodes, (childNode) => childMap[childNode.key] = childNode);
+  each(sortKeys, (key) => {
+    if (dragNode && key === dragNode.key) {
+      nextChildNodes.push(dragNode);
+    } else {
+      nextChildNodes.push(childMap[key]);
+    }
+  });
+  return nextChildNodes;
+}

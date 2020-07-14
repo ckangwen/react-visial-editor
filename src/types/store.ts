@@ -11,6 +11,7 @@ export const GET_DROP_DATA = 'GET_DROP_DATA';
 export const SET_COMPONENT_PROPS = 'SET_COMPONENT_PROPS';
 export const CLEAR_HOVER_STATUS = 'CLEAR_HOVER_STATUS';
 export const CLEAR_SELECT_STATUS = 'CLEAR_SELECT_STATUS';
+export const LAYOUT_RESORT = 'LAYOUT_RESORT'
 
 export interface StateType {
   projectSchema: VirtualComp[]
@@ -22,4 +23,5 @@ export interface StateType {
   hoverKey: null | string,
   dragData: DragDataType | null,
   dropData: null | DropTargetInfoType,
+  compKeys: string[]
 }

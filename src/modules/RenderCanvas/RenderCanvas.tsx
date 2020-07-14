@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { Spin, Button } from 'antd';
+import { Spin } from 'antd';
 import { Ruler } from '@/components/Ruler';
 import { reduxConnect } from '@/utils';
 import styles from './style.css';
@@ -9,6 +9,8 @@ import { ProjectSchemaProps } from '@/types/components';
 import { CompSelectedInfo } from '@/types/data';
 import { iframeSrcDoc } from '@/config';
 import Wrapper from '@/modules/RenderCanvas/Wrapper';
+import { ACTION_TYPES } from '@/models';
+import { ADD_COMPONENT } from '@/types';
 
 let dispatch: Dispatch;
 interface RenderCanvasProps {
@@ -18,8 +20,13 @@ interface RenderCanvasProps {
   dispatch?: Dispatch;
 }
 
-function onDrop() {}
-function onDragover(e: any) {}
+function onDrop(e: any) {
+  e.stopPropagation();
+  dispatch({ type: ACTION_TYPES[ADD_COMPONENT] });
+}
+function onDragover(e: any) {
+  e.preventDefault();
+}
 
 function RenderCanvas(props: RenderCanvasProps) {
   // TODO 需要避免多次渲染
@@ -62,9 +69,9 @@ function RenderCanvas(props: RenderCanvasProps) {
     <section className={styles['render-canvas-container']}>
       <Ruler
         type="horizontal"
-        style={{ display: 'block', width: '100%', height: '30px', marginLeft: 30 }}
+        style={{ display: 'block', position: 'absolute', width: '966px', height: '30px', marginLeft: 30 }}
       />
-      <Ruler type="vertical" style={{ display: 'inline-block', width: '30px', height: '100%' }} />
+      <Ruler type="vertical" style={{ display: 'inline-block', width: '30px', height: '100%', marginTop: 30 }} />
       <div className={styles['render-canvas-content']}>
         <Spin
           size={'large'}

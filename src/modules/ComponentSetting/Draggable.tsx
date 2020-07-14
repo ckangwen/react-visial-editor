@@ -1,6 +1,8 @@
 import React, { memo, useRef } from 'react';
 import { Dispatch } from 'redux';
 import styles from './style.css';
+import { ACTION_TYPES } from '@/models';
+import { GET_DRAG_DATA } from '@/types';
 
 export interface DraggableProps {
   dispatch: Dispatch;
@@ -44,13 +46,13 @@ function Draggable(props: DraggableProps) {
       style={{
         backgroundColor: defaultColors[randomIndex]
       }}
-      onDragStart={() => {
-        // dispatch({
-        //   type: ACTION_TYPES[GET_DRAG_DATA],
-        //   payload: {
-        //     dragData: { ...rest, tag }
-        //   }
-        // })
+      onDragStart={(e: any) => {
+        dispatch({
+          type: ACTION_TYPES[GET_DRAG_DATA],
+          payload: {
+            dragData: { ...rest, tag }
+          }
+        })
       }}
     >
       { tag }
@@ -58,4 +60,4 @@ function Draggable(props: DraggableProps) {
   )
 }
 
-export default memo(Draggable)
+export default memo(Draggable, () => true)

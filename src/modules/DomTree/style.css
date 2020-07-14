@@ -1,0 +1,54 @@
+.sortable-tree-container {
+  /* display: flex; */
+  overflow: auto;
+  height: 100%;
+}
+
+.sortable-tree-container .sortable-tree {
+  flex: 1;
+  width: fit-content;
+}
+.sortable-tree-container .sortable-tree .sortable-tree-item  .header-container {
+  padding-top: 0;
+}
+.sortable-tree-container .sortable-tree .header-container {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 5px 5px 10px;
+  white-space: nowrap;
+}
+
+.caret-right-icon {
+  padding: 5px;
+  font-size: 16px;
+  transition: all .2s;
+}
+:global .domTree-tabPane  .ant-collapse-borderless > .ant-collapse-item {
+  flex: 1 !important;
+}
+:global .domTree-tabPane .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  padding: 0!important;
+}
+:global .domTree-tabPane .ant-collapse {
+  display: flex;
+}
+:global .domTree-tabPane .ant-collapse-borderless {
+  background-color: #fff;
+}
+:global .domTree-tabPane  .ant-collapse-borderless > .ant-collapse-item {
+  border: 0;
+}
+:global .domTree-tabPane  .ant-collapse-header {
+  padding: 0 !important;
+  border: 0;
+}
+:global .domTree-tabPane .ant-collapse-content > .ant-collapse-content-box {
+  padding: 0 0 0 16px;
+}
+
+.sortable-tree-container  .ant-collapse-header {
+  padding: 0 !important;
+  border: 0;
+}

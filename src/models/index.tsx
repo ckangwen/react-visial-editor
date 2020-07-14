@@ -1,5 +1,4 @@
 import defaultData from '@/data';
-import { CollectedComponents, AllComponentPropConfig } from '../config/index';
 import {
   StateType,
   ADD_COMPONENT,
@@ -13,11 +12,13 @@ import {
   SET_COMPONENT_PROPS,
   CLEAR_HOVER_STATUS,
   CLEAR_SELECT_STATUS,
+  LAYOUT_RESORT
 } from '@/types';
 import { v4 as uuid } from 'uuid';
 import update from 'lodash/update';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
+import { getNewSortChildNodes } from '@/utils'
 
 export interface PropsConfigType {
   [propName: string]: PropInfoType;
@@ -85,6 +86,7 @@ export const ACTION_TYPES = {
   [GET_DROP_DATA]: `${namespace}/getDropData`,
   [CLEAR_HOVER_STATUS]: `${namespace}/clearHoverStatus`,
   [CLEAR_SELECT_STATUS]: `${namespace}/clearSelectStatus`,
+  [LAYOUT_RESORT]: `${namespace}/layoutResort`
 };
 
 const Model = {
@@ -96,6 +98,7 @@ const Model = {
     styleSetting: {},
     dropData: {},
     dragData: {},
+    compKeys: []
   },
   effects: {},
 
@@ -206,8 +209,8 @@ const Model = {
     },
     selectComponent(state: StateType, { payload }: any) {
       const { projectSchema } = state;
-      const { componentConfig, compKeys, path } = payload;
-      const { tag, key } = componentConfig;
+      const { componentSchema, compKeys, path } = payload;
+      const { tag, key } = componentSchema;
       let selectedKey = key;
 
       return {
@@ -218,8 +221,9 @@ const Model = {
           path,
           compKeys,
         },
+        compKeys,
         projectPropsSheet: get(projectSchema, path).props,
-        hoverKey: null,
+        hoverKey: key,
       };
     },
     clearHoverStatus(state: StateType) {
@@ -279,6 +283,16 @@ const Model = {
         projectPropsSheet: currentCompProps,
       };
     },
+    layoutResort(state: StateType, { payload }: any) {
+      const { sortKeys, path, dragData } = payload;
+      const { projectSchema: prevProjectSchema } = state;
+      let projectSchema = cloneDeep(prevProjectSchema);
+      update(projectSchema, path, children => getNewSortChildNodes(sortKeys, children, dragData),);
+      return {
+        ...state,
+        projectSchema,
+      };
+  }
   },
 };
 

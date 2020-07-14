@@ -8,7 +8,7 @@ import { getPath } from '@/utils';
 import styles from './style.css';
 import {
   CLEAR_SELECT_STATUS,
-  GET_DRAG_DATA,
+  GET_DRAG_DATA, GET_DROP_DATA,
   HOVER_COMPONENT,
   SELECT_COMPONENT,
 } from '@/types/store';
@@ -59,7 +59,7 @@ function onDragEnd(e: React.MouseEvent, path: string, componentConfig: any) {
   // 阻止事件冒泡到上层元素
   e.stopPropagation();
   dispatch({
-    type: ACTION_TYPES[GET_DRAG_DATA],
+    type: ACTION_TYPES[GET_DROP_DATA],
     payload: {
       path,
       componentConfig,
@@ -91,7 +91,7 @@ function handleClick(
     type: isSelected ? ACTION_TYPES[CLEAR_SELECT_STATUS] : ACTION_TYPES[SELECT_COMPONENT],
     payload: {
       compKeys,
-      componentConfig,
+      componentSchema: componentConfig,
       path,
     },
   });
