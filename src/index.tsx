@@ -1,3 +1,5 @@
+import './wdyr'
+
 import React from 'react';
 import { Layout, Tabs } from 'antd'
 import ComponentSetting from '@/modules/ComponentSetting'

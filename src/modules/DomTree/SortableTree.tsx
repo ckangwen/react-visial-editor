@@ -1,12 +1,12 @@
-import React, { useRef } from 'react';
-import { getPath } from '@/utils';
+import React from 'react';
 import Sortable from '@/components/Sortable';
 import SortableItem from './SortableTreeItem';
-import { CompKeysProps, CompSelectedInfo, LAYOUT_RESORT, VirtualComp } from '@/types';
 import { v4 as uuid } from 'uuid';
-import styles from '@/modules/DomTree/style.css';
-import { Dispatch } from 'redux';
+import { getPath } from '@/utils';
 import { ACTION_TYPES } from '@/models';
+import { CompKeysProps, CompSelectedInfo, LAYOUT_RESORT, VirtualComp } from '@/types';
+import { Dispatch } from 'redux';
+import styles from './style.css';
 
 interface SortTreeProps {
   componentSchema: VirtualComp;
@@ -16,15 +16,8 @@ interface SortTreeProps {
   compKeys?: CompKeysProps;
   hoverKey?: string;
 }
-interface storeType {
-  [propName: string]: any;
-}
 
 let dispatch: Dispatch;
-const store: storeType = {
-  nextSibling: '',
-  activeSortable: {},
-};
 
 const onLayoutResort = (sortKeys: string[], evt: any, props: any) => {
   const { path } = props;

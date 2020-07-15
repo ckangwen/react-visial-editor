@@ -1,16 +1,16 @@
 import React, { memo, useRef } from 'react';
-import { Dispatch } from 'redux';
+import { Dispatch } from 'dva';
 import styles from './style.css';
 import { ACTION_TYPES } from '@/models';
 import { GET_DRAG_DATA } from '@/types';
+import { useDispatch } from 'dva'
 
 export interface DraggableProps {
-  dispatch: Dispatch;
   dragData: {
     tag: string;
     defaultProps?: any;
     text?: string;
-  }
+  };
 }
 
 const defaultColors = [
@@ -27,15 +27,11 @@ const defaultColors = [
 ];
 
 function Draggable(props: DraggableProps) {
-  const {
-    dispatch,
-    dragData
-  } = props
-
-  let {
-    tag,
-    ...rest
-  } = dragData;
+  const { dragData } = props;
+  const dispatch = useDispatch();
+  let { tag, ...rest } = dragData;
+  const text = tag
+  // TODO 拖拽菜单的文本显示有待改善
   tag = tag.indexOf('-') > -1 ? tag.slice(0, tag.indexOf('-')) : tag;
 
   const randomIndex: number = useRef(Math.floor(Math.random() * 10)).current;
@@ -44,20 +40,20 @@ function Draggable(props: DraggableProps) {
       draggable
       className={styles['draggable-item']}
       style={{
-        backgroundColor: defaultColors[randomIndex]
+        backgroundColor: defaultColors[randomIndex],
       }}
       onDragStart={(e: any) => {
         dispatch({
           type: ACTION_TYPES[GET_DRAG_DATA],
           payload: {
-            dragData: { ...rest, tag }
-          }
-        })
+            dragData: { ...rest, tag },
+          },
+        });
       }}
     >
-      { tag }
+      {text}
     </div>
-  )
+  );
 }
 
-export default memo(Draggable, () => true)
+export default memo(Draggable, (prev, next) => prev.dragData.tag === next.dragData.tag);

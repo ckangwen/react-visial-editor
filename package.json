@@ -32,6 +32,7 @@
     "@types/sortablejs": "^1.10.4",
     "@types/uuid": "^8.0.0",
     "@typescript-eslint/eslint-plugin": "^3.5.0",
+    "@welldone-software/why-did-you-render": "^4.2.5",
     "babel-eslint": "^9.0.0",
     "cz-conventional-changelog": "3.2.0",
     "eslint": "^5.4.0",

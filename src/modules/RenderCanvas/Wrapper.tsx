@@ -167,14 +167,6 @@ export default function Wrapper(props: CommonContainerProps) {
 
   const { key, children = [] } = componentConfig;
   const { selectedKey } = selectedInfo;
-  // const { isHovered, isSelected } = selectedStatus(key, hoverKey, selectedKey);
-
-  // useEffect(() => {
-  //   if (isSelected) {
-  //     changeSelectedStatus(null, componentConfig, domTreeKeys,hoverKey, selectedKey, requiredProp.current, path, parentPath, propName);
-  //   }
-  // }, [componentConfig, hoverKey, isSelected, parentPath, path, selectedKey]);
-  // children: renderChildren(children)
   return createElement(get(OriginalComponents, containerName, containerName), {
     ...handleProps(props, hoverKey, selectedKey),
     key,

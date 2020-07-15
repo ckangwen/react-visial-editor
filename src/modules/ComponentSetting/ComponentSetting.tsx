@@ -2,21 +2,17 @@ import React, { useState, memo, useRef } from 'react';
 import { Input, Col, Collapse, Row, Affix } from 'antd';
 import { CaretRightOutlined } from '@ant-design/icons';
 import Draggable, { DraggableProps } from './Draggable';
-import { reduxConnect } from '@/utils';
 import isEmpty from 'lodash/isEmpty';
 import Fuse from 'fuse.js';
-import { Dispatch } from 'redux';
+import { Dispatch } from 'dva';
 import { blocksCategory, AllBlockCategory } from '@/config';
 import styles from './style.css';
-
-let dispatch: Dispatch;
 
 interface CategoryType {
   dispatch?: Dispatch;
 }
 
 function Category(props: CategoryType) {
-  dispatch = props.dispatch!;
   const [openKeys, setOpenKeys] = useState<string[]>([]);
   const [allBlockConfigs, setAllBlockConfigs] = useState(blocksCategory);
   const ref = useRef<HTMLDivElement>(null);
@@ -51,7 +47,6 @@ function Category(props: CategoryType) {
                 <Row>
                   {Object.keys(componentConfig).map((tag: string) => {
                     const props: DraggableProps = {
-                      dispatch,
                       dragData: {
                         tag,
                         defaultProps: (componentConfig as any)[tag],
@@ -73,4 +68,4 @@ function Category(props: CategoryType) {
   );
 }
 
-export default reduxConnect([''])(Category);
+export default memo(Category);

@@ -2,15 +2,13 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Spin } from 'antd';
 import { Ruler } from '@/components/Ruler';
+import Wrapper from './Wrapper';
 import { reduxConnect } from '@/utils';
-import styles from './style.css';
-import { Dispatch } from 'redux';
-import { ProjectSchemaProps } from '@/types/components';
-import { CompSelectedInfo } from '@/types/data';
 import { iframeSrcDoc } from '@/config';
-import Wrapper from '@/modules/RenderCanvas/Wrapper';
 import { ACTION_TYPES } from '@/models';
-import { ADD_COMPONENT } from '@/types';
+import { Dispatch } from 'redux';
+import { ProjectSchemaProps, CompSelectedInfo, ADD_COMPONENT } from '@/types';
+import styles from './style.css';
 
 let dispatch: Dispatch;
 interface RenderCanvasProps {
@@ -27,51 +25,67 @@ function onDrop(e: any) {
 function onDragover(e: any) {
   e.preventDefault();
 }
-
-function RenderCanvas(props: RenderCanvasProps) {
-  // TODO 需要避免多次渲染
-  const { projectSchema, selectedInfo = {}, hoverKey = '' } = props;
-  dispatch = props.dispatch!;
-  const [spinShow, setSpinShow] = useState(true);
-  let content: any;
+const renderContent = (
+  projectSchema?: ProjectSchemaProps,
+  selectedInfo?: CompSelectedInfo,
+  hoverKey: string = '',
+) => {
+  let content = null;
   if (Array.isArray(projectSchema) && projectSchema.length > 0) {
     const { tag, key } = projectSchema[0] || {};
     const resultProps = {
       componentConfig: projectSchema[0],
       path: '[0]',
       compKeys: [key],
-      selectedInfo,
+      selectedInfo: selectedInfo || {},
       hoverKey,
       dispatch,
     };
-    // content = React.createElement(Button, null, ['hello']);
     content = React.createElement(Wrapper, { containerName: 'Layout', ...resultProps });
   }
+  return content;
+};
+
+function RenderCanvas(props: RenderCanvasProps) {
+  const { projectSchema, selectedInfo, hoverKey = '' } = props;
+  dispatch = props.dispatch!;
+  const [spinShow, setSpinShow] = useState(true);
+  let iframe = useRef<HTMLIFrameElement>();
+
+  // 为iframe添加事件响应，放置于useEffect中是为了防止多次渲染重复调用
+  useEffect(() => {
+    iframe.current = document.getElementById('dnd-iframe') as HTMLIFrameElement;
+    iframe.current.contentWindow!.addEventListener('drop', onDrop);
+    iframe.current.contentWindow!.addEventListener('dragover', onDragover);
+  }, []);
+
+  let content: any = renderContent(projectSchema, selectedInfo, hoverKey);
+
   let divContainer = useRef(null);
   useEffect(() => {
-    const iframe = document.getElementById('dnd-iframe') as HTMLIFrameElement;
-    iframe.contentWindow!.addEventListener('drop', onDrop);
-    // eslint-disable-next-line no-unused-expressions
-    iframe.contentWindow?.addEventListener('dragover', (e: any) => {
-      onDragover(e);
-    });
     if (!spinShow) {
-      divContainer.current = iframe!.contentDocument?.getElementById('dnd-container') as any;
-      ReactDOM.render(content, divContainer.current);
+      console.log(2);
+      divContainer.current = iframe.current!.contentDocument?.getElementById('dnd-container') as any;
+      ReactDOM.render(content!, divContainer.current);
     }
   }, [content, divContainer, spinShow]);
-  useEffect(() => {
-    if (divContainer.current) {
-      ReactDOM.render(content, divContainer.current);
-    }
-  }, [content]);
+
   return (
     <section className={styles['render-canvas-container']}>
       <Ruler
         type="horizontal"
-        style={{ display: 'block', position: 'absolute', width: '966px', height: '30px', marginLeft: 30 }}
+        style={{
+          display: 'block',
+          position: 'absolute',
+          width: '966px',
+          height: '30px',
+          marginLeft: 30,
+        }}
       />
-      <Ruler type="vertical" style={{ display: 'inline-block', width: '30px', height: '100%', marginTop: 30 }} />
+      <Ruler
+        type="vertical"
+        style={{ display: 'inline-block', width: '30px', height: '100%', marginTop: 30 }}
+      />
       <div className={styles['render-canvas-content']}>
         <Spin
           size={'large'}
