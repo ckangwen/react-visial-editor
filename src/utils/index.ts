@@ -2,9 +2,13 @@
 import { connect } from 'dva';
 import each from 'lodash/each';
 import isEmpty from 'lodash/isEmpty';
+import get from 'lodash/get';
+import isEqual from 'lodash/isEqual';
+import isObject from 'lodash/isObject';
+import keys from 'lodash/keys';
 import { namespace } from '@/models'
 import { useRef, useEffect } from 'react';
-import { VirtualComp } from '@/types';
+import { PROPS_TYPES, VirtualComp } from '@/types';
 
 interface RenderPath {
   path?: string,
@@ -13,11 +17,6 @@ interface RenderPath {
 }
 
 export function asLiterals<T extends string>(arr: T[]): T { return arr[0]; }
-
-let ccc = ['12', '44']
-const arr = asLiterals(['12', '44']);
-type ccc = typeof arr;
-// type v = {[K in (typeof arr)[number]]: string};
 
 type KeyTypes = keyof any
 export function literalArray<T extends KeyTypes>(...entries: T[]): T[] {
@@ -84,3 +83,33 @@ export function getNewSortChildNodes(sortKeys: string[], oldChildNodes: VirtualC
   });
   return nextChildNodes;
 }
+
+export const SPECIAL_STRING_CONSTANTS: any = {
+  'null': null,
+};
+export const formatSpecialProps = (props: any, propsConfig: any) => {
+  const nextProps = props;
+  each(props, (v, k) => {
+    if (get(propsConfig, k)) {
+      if (!isObject(v)) {
+        if (SPECIAL_STRING_CONSTANTS[v] !== undefined) {
+          nextProps[k] = SPECIAL_STRING_CONSTANTS[v];
+        } else if (propsConfig[k].type === PROPS_TYPES.function) {
+          const funcTemplate = get(propsConfig, `${k}.placeholder`);
+          if (funcTemplate) {
+            nextProps[k] = () => eval(funcTemplate);
+          } else {
+            nextProps[k] = () => {
+            };
+          }
+        }
+      } else if (isObject(v) && !isEmpty(propsConfig[k].childPropsConfig) && isEqual(keys(v), keys(propsConfig[k].childPropsConfig))) {
+        formatSpecialProps(v, propsConfig[k].childPropsConfig);
+      }
+    } else if (!v) {
+      delete nextProps[k];
+    }
+
+  });
+  return nextProps;
+};

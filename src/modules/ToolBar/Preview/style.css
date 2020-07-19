@@ -1,0 +1,62 @@
+.preview-header {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  height: 68px;
+  padding-left: 22px;
+  overflow: hidden;
+}
+
+.preview-container {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 10px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.preview-mobile {
+  position: relative;
+  width: 414px;
+  max-height: 736px;
+  box-shadow: 10px 0 10px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.page-container {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  background-color: #F5F5F5;
+  overflow: hidden;
+}
+
+.card-container {
+  height: 100%;
+}
+
+.card-container :global .ant-tabs-bar {
+  margin: 0 !important;
+}
+.card-container :global .ant-tabs-bar {
+  height: 100%;
+}
+
+
+.browser-mockup {
+  position: relative;
+  /*overflow: auto;*/
+  height: 100%;
+  width: 100%;
+  border-radius: 3px 3px 0 0;
+  -webkit-box-shadow: 0 0.1em 0.5em 0 rgba(0, 0, 0, 0.28);
+  box-shadow: 0 0.1em 0.5em 0 rgba(0, 0, 0, 0.28);
+}
+.browser-mockup :global .ant-spin-container {
+  height: 100%;
+}
+
+.dnd-container {
+  height: 100%;
+  width: 100%;
+  border: 0;
+}

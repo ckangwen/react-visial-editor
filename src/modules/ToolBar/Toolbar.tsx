@@ -1,14 +1,17 @@
-import React from 'react'
-import { Col, Row } from 'antd';
-import map from 'lodash/map'
+import React, { useState } from 'react';
+import { Col, Row, Modal } from 'antd';
 import { UndoOutlined, RedoOutlined, EyeOutlined, DownloadOutlined, SaveOutlined, CopyOutlined, DeleteOutlined } from '@ant-design/icons'
-import styles from './style.css';
+import Preview from './Preview'
+import map from 'lodash/map'
+import { reduxConnect } from '@/utils'
 import { Dispatch } from 'redux';
+import styles from './style.css';
+import { VirtualComp } from '@/types';
 
 export interface ToolBarProps {
   dispatch?: Dispatch;
   selectedInfo?: any;
-  projectSchema?: any;
+  projectSchema?: VirtualComp[];
   undo?: any[];
   redo?: any[];
   styleSetting?: any;
@@ -24,40 +27,17 @@ interface ToolbarMenusProps{
   })[]
 }
 
-const toolbarMenus: ToolbarMenusProps[] = [{
-  span: 8,
-  style: { justifyContent: 'flex-end' },
-  group: [
-    { title: 'undo', icon: () => <UndoOutlined /> },
-    { title: 'redo', icon: () => <RedoOutlined /> },
-  ],
-}, {
-  span: 8,
-  style: { justifyContent: 'flex-end' },
-  group: [
-    { title: '预览', icon: () => <EyeOutlined /> },
-    { title: '导出代码', icon: () => <DownloadOutlined /> },
-  ],
-},
-  {
-    span: 8,
-    style: { justifyContent: 'flex-end', paddingRight: '50px' },
-    group: [
-      { title: 'save', icon: () => <SaveOutlined /> },
-      { title: 'copy', icon: () => <CopyOutlined /> },
-      { title: 'clear', icon: () => <DeleteOutlined /> },
 
-    ],
-  }];
 
 
 function renderMenu(config: any, key: string) {
-  const { title, icon } = config
+  const { title, icon, handleClick } = config;
   return (
     <div
       style={{ color: '#000' }}
       className={styles['icon-container']}
       key={key}
+      onClick={ handleClick ? handleClick : undefined}
     >
       { icon() }
       <span>{title}</span>
@@ -78,6 +58,35 @@ function renderGroup(content: any, key: string) {
 }
 
 function ToolBar(props: ToolBarProps) {
+  const [visible, setVisible] = useState(false);
+  const {
+    projectSchema = []
+  } = props;
+  const toolbarMenus: ToolbarMenusProps[] = [{
+    span: 8,
+    style: { justifyContent: 'flex-end' },
+    group: [
+      { title: 'undo', icon: () => <UndoOutlined /> },
+      { title: 'redo', icon: () => <RedoOutlined /> },
+    ],
+  }, {
+    span: 8,
+    style: { justifyContent: 'flex-end' },
+    group: [
+      { title: '预览', icon: () => <EyeOutlined />, handleClick: () => setVisible(true) },
+      { title: '导出代码', icon: () => <DownloadOutlined /> },
+    ],
+  },
+    {
+      span: 8,
+      style: { justifyContent: 'flex-end', paddingRight: '50px' },
+      group: [
+        { title: 'save', icon: () => <SaveOutlined /> },
+        { title: 'copy', icon: () => <CopyOutlined /> },
+        { title: 'clear', icon: () => <DeleteOutlined /> },
+
+      ],
+    }];
   return (
     <Row justify="space-around" align="middle" className={styles.content}>
        <Col style={{ fontSize: '18px', paddingLeft: '21px', height: 64 }} span={4}>React-Visual-Editor</Col>
@@ -86,8 +95,23 @@ function ToolBar(props: ToolBarProps) {
             {map(toolbarMenus, renderGroup)}
           </Row>
         </Col>
+      <Modal
+        destroyOnClose
+        visible={visible}
+        width="100%"
+        bodyStyle = {{
+          padding: 0,
+          overflow: 'hidden',
+          height: '100vh',
+        }}
+        footer={null}
+        closable={false}
+        wrapClassName={styles['full-screen']}
+      >
+        <Preview projectSchema={projectSchema} visible={visible} onCancel={() => setVisible(false)}/>
+      </Modal>
     </Row>
   )
 }
 
-export default ToolBar
+export default reduxConnect(['projectSchema'])(ToolBar)
